@@ -11,24 +11,40 @@
 		private $encoding;
 		private $specialCaseOpeningTags = array( "/<strong[^>]*/i", "/<b[^>]*/i", "/<i[^>]*/i", "/<big[^>]*/i", "/<small[^>]*/i", "/<u[^>]*/i", "/<sub[^>]*/i", "/<sup[^>]*/i", "/<strike[^>]*/i", "/<s[^>]*/i", '/<p[^>]*/i' );
 		private $specialCaseClosingTags = array( "</strong>", "</b>", "</i>", "</big>", "</small>", "</u>", "</sub>", "</sup>", "</strike>", "</s>", '</p>' );
+		private $separatorTags = array( '<ul', '<ol', '<li', '<p', '<h', '<br', '<table', '<td');
+		private $separatorCounter = 0;
 
 		public function __construct( $oldText, $newText, $encoding = 'UTF-8' ) {
-			$this->oldText = $this->purifyHtml( trim( $oldText ) );
-			$this->newText = $this->purifyHtml( trim( $newText ) );
+			$this->oldText = $this->addSeparatorTags( $this->purifyHtml( trim( $oldText ) ) );
+			$this->newText = $this->addSeparatorTags( $this->purifyHtml( trim( $newText ) ) );
 			$this->encoding = $encoding;
 			$this->content = '';
 		}
 
 		public function getOldHtml() {
-			return $this->oldText;
+			return $this->removeSeparatorTags($this->oldText);
 		}
 
 		public function getNewHtml() {
-			return $this->newText;
+			return $this->removeSeparatorTags($this->newText);
 		}
 
 		public function getDifference() {
-			return $this->content;
+			return $this->removeSeparatorTags($this->content);
+		}
+
+		private function addSeparatorTags($html) {
+			foreach ($this->separatorTags as $tag) {
+				$html = preg_replace_callback('#' . $tag . '#',
+					function($matches) {
+						return '<t' . $this->separatorCounter++ . '>' . $matches[0];
+					}, $html);
+			}
+			return $html;
+		}
+
+		private function removeSeparatorTags($html) {
+			return preg_replace('#<t\d+[^>]*>#', '', $html);
 		}
 
 		private function getStringBetween( $str, $start, $end ) {
