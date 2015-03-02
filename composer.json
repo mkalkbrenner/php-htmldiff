@@ -8,15 +8,9 @@
     ],
     "homepage": "https://github.com/mkalkbrenner/php-htmldiff",
     "license": "GNU General Public License V2",
-    "repositories": [
-        {
-        "type": "git",
-        "url": "https://github.com/rashid2538/php-htmldiff.git"
-        }
-    ],
     "require":{
         "php": ">=5.5.0",
-        "rashid2538/php-htmldiff": "dev-master"
+        "caxy/php-htmldiff": "0.*"
     },
     "autoload": {
         "files": [
