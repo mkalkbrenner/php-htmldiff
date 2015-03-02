@@ -1,6 +1,6 @@
 <?php
 
-	require_once( '../HtmlDiff.php' );
+	require_once( '../vendor/autoload.php' );
 	$html1 = "<p><i>This is</i> some sample text to <strong>demonstrate</strong> the capability of the <strong>HTML diff tool</strong>.</p>
                                 <p>It is based on the <b>Ruby</b> implementation found <a href='http://github.com/myobie/htmldiff'>here</a>. Note how the link has no tooltip</p>
                                 <table cellpadding='0' cellspacing='0'>
@@ -68,11 +68,12 @@
                                   </tr>
                                 </table>
                                 ";
-	$diff = new HtmlDiff( $html1, $html2 );
-	$diff->build();
+	$diff = new HtmlDiffAdvanced();
+	$diff->setOldHtml($html1);
+	$diff->setNewHtml($html2);
 	echo "<h2>Old html</h2>";
 	echo $diff->getOldHtml();
-	echo "<h2>New html</h2>";
+	echo "<hr><h2>New html</h2>";
 	echo $diff->getNewHtml();
-	echo "<h2>Compared html</h2>";
+	echo "<hr><h2>Compared html</h2>";
 	echo $diff->getDifference();
