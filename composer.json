@@ -9,11 +9,13 @@
     "homepage": "https://github.com/mkalkbrenner/php-htmldiff",
     "license": "GNU General Public License V2",
     "require":{
+      "php": ">=5.5.0",
       "rashid2538/php-htmldiff": "dev-master"
     },
     "autoload": {
         "files": [
-            "HtmlDiffAdvanced.php"
+            "src/HtmlDiffAdvancedInterface.php",
+            "src/HtmlDiffAdvanced.php"
         ]
     }
 }

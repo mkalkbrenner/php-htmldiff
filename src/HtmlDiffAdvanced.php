@@ -1,6 +1,6 @@
 <?php
 
-class HtmlDiffAdvanced extends HtmlDiff {
+class HtmlDiffAdvanced extends HtmlDiff implements HtmlDiffAdvancedInterface {
   protected $oldText = '';
   protected $newText = '';
   protected $encoding = 'UTF-8';
