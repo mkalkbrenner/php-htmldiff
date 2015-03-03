@@ -10,7 +10,7 @@
     "license": "GNU General Public License V2",
     "require":{
         "php": ">=5.5.0",
-        "caxy/php-htmldiff": "0.*"
+        "caxy/php-htmldiff": ">=0.0.4"
     },
     "autoload": {
         "files": [
