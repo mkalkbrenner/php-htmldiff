@@ -1,30 +1,24 @@
 <?php
 
 class HtmlDiffAdvanced extends \Caxy\HtmlDiff\HtmlDiff implements HtmlDiffAdvancedInterface {
-  protected $oldText = '';
-  protected $newText = '';
-  protected $encoding = 'UTF-8';
-  protected $specialCaseTags;
-  protected $groupDiffs;
 
   protected $separatorTags = array(
-    '<ul',
-    '<ol',
-    '<li',
-    '<p',
-    '<h',
-    '<br',
-    '<table',
-    '<td'
+    'ul',
+    'ol',
+    'li',
+    'p',
+    'h\d+',
+    'br',
+    'table',
+    'td'
   );
   protected $separatorCounter = 0;
   protected $buildRequired = TRUE;
+  protected $oldTextPurified = '';
+  protected $newTextPurified = '';
 
-  public function __construct($oldText = '', $newText = '', $encoding = '', $specialCaseTags = null, $groupDiffs = null) {
-    $tags = ($specialCaseTags === null) ? static::$defaultSpecialCaseTags : $specialCaseTags;
-    $this->setSpecialCaseTags($tags);
-
-    $this->setGroupDiffs($groupDiffs);
+  public function __construct($oldText = '', $newText = '', $encoding = 'UTF-8', $specialCaseTags = null, $groupDiffs = null) {
+    parent::__construct($oldText, $newText, $encoding, $specialCaseTags, $groupDiffs);
 
     if ($oldText) {
       $this->setOldHtml($oldText);
@@ -33,78 +27,71 @@ class HtmlDiffAdvanced extends \Caxy\HtmlDiff\HtmlDiff implements HtmlDiffAdvanc
     if ($newText) {
       $this->setNewHtml($newText);
     }
-
-    if ($encoding) {
-      $this->setEncoding($encoding);
-    }
   }
 
   public function setEncoding($encoding) {
-    $this->buildRequired = TRUE;
     $this->encoding = $encoding;
-    parent::__construct($this->oldText, $this->newText, $this->encoding, $this->specialCaseTags, $this->groupDiffs);
+    $this->buildRequired = TRUE;
   }
 
   public function setOldHtml($oldText) {
+    $this->oldTextPurified = $this->purifyHtml(trim($oldText));
+    $this->oldText = $this->addSeparatorTags($this->oldTextPurified);
     $this->buildRequired = TRUE;
-    $this->oldText = $this->addSeparatorTags($oldText);
-    parent::__construct($this->oldText, $this->newText, $this->encoding, $this->specialCaseTags, $this->groupDiffs);
   }
 
   public function getOldHtml() {
-    return $this->removeSeparatorTags($this->oldText);
+    return $this->oldTextPurified;
   }
 
   public function setNewHtml($newText) {
+    $this->newTextPurified = $this->purifyHtml(trim($newText));
+    $this->newText = $this->addSeparatorTags($this->newTextPurified);
     $this->buildRequired = TRUE;
-    $this->newText = $this->addSeparatorTags($newText);
-    parent::__construct($this->oldText, $this->newText, $this->encoding, $this->specialCaseTags, $this->groupDiffs);
   }
 
   public function getNewHtml() {
-    return $this->removeSeparatorTags($this->newText);
+    return $this->newTextPurified;
   }
 
   public function setInsertSpaceInReplace($boolean) {
-    $this->buildRequired = TRUE;
     parent::setInsertSpaceInReplace($boolean);
+    $this->buildRequired = TRUE;
   }
 
   public function setSpecialCaseChars(array $chars) {
-    $this->buildRequired = TRUE;
     parent::setSpecialCaseChars($chars);
+    $this->buildRequired = TRUE;
   }
 
   public function addSpecialCaseChar($char) {
-    $this->buildRequired = TRUE;
     parent::addSpecialCaseChar($char);
+    $this->buildRequired = TRUE;
   }
 
   public function removeSpecialCaseChar($char) {
-    $this->buildRequired = TRUE;
     parent::removeSpecialCaseChar($char);
+    $this->buildRequired = TRUE;
   }
 
   public function setSpecialCaseTags(array $tags = array()) {
+    parent::setSpecialCaseTags($tags);
     $this->buildRequired = TRUE;
-    $this->specialCaseTags = $tags;
-    parent::setSpecialCaseTags($this->specialCaseTags);
   }
 
   public function addSpecialCaseTag($tag) {
-    $this->buildRequired = TRUE;
     parent::addSpecialCaseTag($tag);
+    $this->buildRequired = TRUE;
   }
 
   public function removeSpecialCaseTag($tag) {
-    $this->buildRequired = TRUE;
     parent::removeSpecialCaseTag($tag);
+    $this->buildRequired = TRUE;
   }
 
   public function setGroupDiffs($boolean) {
-    $this->buildRequired = TRUE;
-    $this->groupDiffs = ($boolean === null) ? static::$defaultGroupDiffs : $boolean;
     parent::setGroupDiffs($this->groupDiffs);
+    $this->buildRequired = TRUE;
   }
 
   public function getDifference() {
@@ -114,9 +101,16 @@ class HtmlDiffAdvanced extends \Caxy\HtmlDiff\HtmlDiff implements HtmlDiffAdvanc
     return $this->removeSeparatorTags(parent::getDifference());
   }
 
+  public function build() {
+    if ($this->buildRequired) {
+      $this->buildRequired = FALSE;
+      return parent::build();
+    }
+  }
+
   protected function addSeparatorTags($html) {
     foreach ($this->separatorTags as $tag) {
-      $html = preg_replace_callback('#' . $tag . '#',
+      $html = preg_replace_callback('#<' . $tag . '(\s|>)#',
         function ($matches) {
           return '<t' . $this->separatorCounter++ . '>' . $matches[0];
         }, $html);
@@ -126,12 +120,5 @@ class HtmlDiffAdvanced extends \Caxy\HtmlDiff\HtmlDiff implements HtmlDiffAdvanc
 
   protected function removeSeparatorTags($html) {
     return preg_replace('#<t\d+[^>]*>#', '', $html);
-  }
-
-  public function build() {
-    if ($this->buildRequired) {
-      $this->buildRequired = FALSE;
-      return parent::build();
-    }
   }
 }
