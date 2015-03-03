@@ -1,7 +1,7 @@
 {
     "name": "mkalkbrenner/php-htmldiff-advanced",
     "type": "library",
-    "description": "A library for comparing two HTML files/snippets and highlighting the differences using simple HTML.",
+    "description": "An add-on for the php-htmldiff library for comparing two HTML files/snippets and highlighting the differences using simple HTML.",
     "keywords": [
         "diff",
         "html"
