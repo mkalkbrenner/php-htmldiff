@@ -2,20 +2,7 @@
 
 class HtmlDiffAdvanced extends \Caxy\HtmlDiff\HtmlDiff implements HtmlDiffAdvancedInterface {
 
-  protected $separatorTags = array(
-    'ul',
-    'ol',
-    'li',
-    'p',
-    'h\d+',
-    'br',
-    'table',
-    'td'
-  );
-  protected $separatorCounter = 0;
   protected $buildRequired = TRUE;
-  protected $oldTextPurified = '';
-  protected $newTextPurified = '';
 
   public function __construct($oldText = '', $newText = '', $encoding = 'UTF-8', $specialCaseTags = null, $groupDiffs = null) {
     parent::__construct($oldText, $newText, $encoding, $specialCaseTags, $groupDiffs);
@@ -35,23 +22,13 @@ class HtmlDiffAdvanced extends \Caxy\HtmlDiff\HtmlDiff implements HtmlDiffAdvanc
   }
 
   public function setOldHtml($oldText) {
-    $this->oldTextPurified = $this->purifyHtml(trim($oldText));
-    $this->oldText = $this->addSeparatorTags($this->oldTextPurified);
+    $this->oldText = $this->purifyHtml(trim($oldText));
     $this->buildRequired = TRUE;
-  }
-
-  public function getOldHtml() {
-    return $this->oldTextPurified;
   }
 
   public function setNewHtml($newText) {
-    $this->newTextPurified = $this->purifyHtml(trim($newText));
-    $this->newText = $this->addSeparatorTags($this->newTextPurified);
+    $this->newText = $this->purifyHtml(trim($newText));
     $this->buildRequired = TRUE;
-  }
-
-  public function getNewHtml() {
-    return $this->newTextPurified;
   }
 
   public function setInsertSpaceInReplace($boolean) {
@@ -98,7 +75,7 @@ class HtmlDiffAdvanced extends \Caxy\HtmlDiff\HtmlDiff implements HtmlDiffAdvanc
     if ($this->buildRequired) {
       $this->build();
     }
-    return $this->removeSeparatorTags(parent::getDifference());
+    return parent::getDifference();
   }
 
   public function build() {
@@ -106,19 +83,5 @@ class HtmlDiffAdvanced extends \Caxy\HtmlDiff\HtmlDiff implements HtmlDiffAdvanc
       $this->buildRequired = FALSE;
       return parent::build();
     }
-  }
-
-  protected function addSeparatorTags($html) {
-    foreach ($this->separatorTags as $tag) {
-      $html = preg_replace_callback('#<' . $tag . '(\s|>)#',
-        function ($matches) {
-          return '<t' . $this->separatorCounter++ . '>' . $matches[0];
-        }, $html);
-    }
-    return $html;
-  }
-
-  protected function removeSeparatorTags($html) {
-    return preg_replace('#<t\d+[^>]*>#', '', $html);
   }
 }
