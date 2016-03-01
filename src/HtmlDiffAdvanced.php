@@ -2,6 +2,8 @@
 
 class HtmlDiffAdvanced extends \Caxy\HtmlDiff\HtmlDiff implements HtmlDiffAdvancedInterface {
 
+  protected $buildRequired = TRUE;
+
   public function __construct($oldText = '', $newText = '', $encoding = 'UTF-8', $specialCaseTags = null, $groupDiffs = null) {
     parent::__construct($oldText, $newText, $encoding, $specialCaseTags, $groupDiffs);
 
