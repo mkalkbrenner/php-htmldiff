@@ -81,6 +81,7 @@ class HtmlDiffAdvanced extends \Caxy\HtmlDiff\HtmlDiff implements HtmlDiffAdvanc
   public function build() {
     if ($this->buildRequired) {
       $this->buildRequired = FALSE;
+      $this->content = '';
       return parent::build();
     }
   }
