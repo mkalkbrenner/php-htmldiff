@@ -6,6 +6,7 @@ class HtmlDiffAdvanced extends \Caxy\HtmlDiff\HtmlDiff implements HtmlDiffAdvanc
 
   public function __construct($oldText = '', $newText = '', $encoding = 'UTF-8', $specialCaseTags = null, $groupDiffs = null) {
     parent::__construct($oldText, $newText, $encoding, $specialCaseTags, $groupDiffs);
+    $this->prepare();
 
     if ($oldText) {
       $this->setOldHtml($oldText);
