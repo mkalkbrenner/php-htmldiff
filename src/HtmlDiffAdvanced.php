@@ -22,12 +22,12 @@ class HtmlDiffAdvanced extends \Caxy\HtmlDiff\HtmlDiff implements HtmlDiffAdvanc
   }
 
   public function setOldHtml($oldText) {
-    $this->oldText = $this->purifyHtml(trim($oldText));
+    $this->oldText = $oldText;
     $this->buildRequired = TRUE;
   }
 
   public function setNewHtml($newText) {
-    $this->newText = $this->purifyHtml(trim($newText));
+    $this->newText = $newText;
     $this->buildRequired = TRUE;
   }
 
