@@ -46,4 +46,5 @@ interface HtmlDiffAdvancedInterface {
 
   public function isGroupDiffs();
 
+  public function setPurifierSerializerCachePath($path = NULL);
 }

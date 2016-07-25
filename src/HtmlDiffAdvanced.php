@@ -85,4 +85,11 @@ class HtmlDiffAdvanced extends \Caxy\HtmlDiff\HtmlDiff implements HtmlDiffAdvanc
       return parent::build();
     }
   }
+
+  public function setPurifierSerializerCachePath($path = NULL) {
+    $HTMLPurifierConfig = \HTMLPurifier_Config::createDefault();
+    $HTMLPurifierConfig->set('Cache.SerializerPath', $path);
+    $this->setHTMLPurifierConfig($HTMLPurifierConfig);
+  }
+
 }
